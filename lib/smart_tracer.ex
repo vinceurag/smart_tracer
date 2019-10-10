@@ -24,9 +24,9 @@ defmodule SmartTracer do
         ["Vince"]
   ```
 
-  ### Tracing a function and getting it's return value (possible also for local tracing)
+  ### Tracing a function and getting it's return value (possiblemix hex also for local tracing)
   ```
-      iex> SmartTracer.trace(&FakeModule.hello/1, 5, return: true)
+      iex> SmartTracer.trace(&FakeModulne.hello/1, 5, return: true)
       1
       iex> FakeModule.hello("Vince")
       Elixir.SmartTracer.Support.FakeModule.hello/1 is being called with:
