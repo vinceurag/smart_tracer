@@ -1,11 +1,12 @@
-defmodule Test do
+defmodule SmartTracer.Support.FakeModule do
+  @moduledoc false
+
+  @doc false
   def hello(name) do
     "Hello, my name is #{get_name(name)}"
   end
 
   defp get_name(name) do
-    "WUNDER-#{name}"
+    "NAME-#{name}"
   end
 end
-
-Smar
