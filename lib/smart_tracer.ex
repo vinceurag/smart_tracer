@@ -4,7 +4,7 @@ defmodule SmartTracer do
 
   ## Usage
 
-  When connected to a live remote console, issue the `trace/1` passing the function reference and rate limit.
+  When connected to a live remote console, issue the `trace/2` passing the function reference and rate limit.
 
   ### Tracing a global function
   ```
