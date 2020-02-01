@@ -24,7 +24,7 @@ defmodule SmartTracer do
         ["Vince"]
   ```
 
-  ### Tracing a function and getting it's return value (possiblemix hex also for local tracing)
+  ### Tracing a function and getting it's return value (possible also for local tracing)
   ```
       iex> SmartTracer.trace(&FakeModulne.hello/1, 5, return: true)
       1
@@ -34,31 +34,50 @@ defmodule SmartTracer do
       Elixir.SmartTracer.Support.FakeModule.hello/1 returns:
         "Hello, my name is NAME-Vince"
   ```
+
+  ### Tracing a function and recording calls and returns
+  ```
+      iex> SmartTracer.trace(&FakeModulne.hello/1, 5, return: true, record: true)
+      1
+  ```
+  To playback all the recordings, use `playback/0`
+  ```
+      iex> SmartTracer.playback()
+      [%SmartTracer.Utils.Recorder.Call{
+        args: ["Vince"],
+        arity: 1,
+        datetime: #DateTime<2020-02-01 18:13:04Z>,
+        function: :hello,
+        module: SmartTracer.Support.FakeModule,
+        type: :call
+      },
+      %SmartTracer.Utils.Recorder.Return{
+        arity: 1,
+        datetime: #DateTime<2020-02-01 18:13:04Z>,
+        function: :hello,
+        module: SmartTracer.Support.FakeModule,
+        return_value: "Hello, my name is NAME-Vince",
+        type: :return
+      }]
+  ```
   """
+
+  alias SmartTracer.Core
+  alias SmartTracer.Utils.Recorder
 
   @doc """
   Traces calls for the specified function.
 
   ## Options
   * `:return` - display return value of the specified function, defaults to `false`
+  * `:record` - record calls and returns from traces. Playback using `playback/0`
   * `:scope`  - determines wether to trace local calls as well
     * `:global` (default) - trace only public functions
     * `:local` - trace private function calls as well
   """
   @spec trace(function :: fun(), calls_count :: integer(), opts :: keyword()) :: integer()
   def trace(function, calls_count, opts \\ []) when is_list(opts) do
-    function_info = :erlang.fun_info(function)
-    arity = function_info[:arity]
-    module_name = function_info[:module]
-    function_name = function_info[:name]
-
-    ms = if opts[:return], do: get_matchspec(arity), else: arity
-
-    :recon_trace.calls(
-      {module_name, function_name, ms},
-      calls_count,
-      opts ++ [formatter: &format/1]
-    )
+    Core.trace(function, calls_count, opts)
   end
 
   @doc """
@@ -66,28 +85,19 @@ defmodule SmartTracer do
   """
   @spec stop() :: :ok
   def stop() do
+    Recorder.stop()
     :recon_trace.clear()
   end
 
-  defp get_matchspec(arity) do
-    var_placeholders = generate_var_placeholders(arity)
+  @doc """
+  Start recording calls/returns to an Agent.
+  """
+  @spec start_recording() :: {:ok, pid()}
+  defdelegate start_recording(), to: Recorder
 
-    [{var_placeholders, [], [{:return_trace}]}]
-  end
-
-  defp format({:trace, _pid, :call, {module, func_name, args}}) do
-    IO.puts("\n#{module}.#{func_name}/#{length(args)} is being called with:")
-    IO.puts(IO.ANSI.format([:yellow, "\t#{inspect(args)}"]))
-  end
-
-  defp format({:trace, _pid, :return_from, {module, func_name, arity}, return_value}) do
-    IO.puts("\n#{module}.#{func_name}/#{arity} returns:")
-    IO.puts(IO.ANSI.format([:green, "\t#{inspect(return_value)}"]))
-  end
-
-  defp generate_var_placeholders(arity) do
-    1..arity
-    |> Enum.to_list()
-    |> Enum.map(fn num -> :"$#{num}" end)
-  end
+  @doc """
+  Returns all the recordings.
+  """
+  @spec playback() :: [Recorder.Call.t() | Recorder.Return.t()]
+  defdelegate playback(), to: Recorder
 end
