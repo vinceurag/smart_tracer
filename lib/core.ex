@@ -38,7 +38,6 @@ defmodule SmartTracer.Core do
   end
 
   defp maybe_record(opts) do
-    IO.inspect(opts)
     if opts[:record], do: start_recording()
   end
 
