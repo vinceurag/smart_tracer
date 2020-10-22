@@ -14,10 +14,14 @@ defmodule SmartTracer.Core do
 
     maybe_record(opts)
 
+    formatter = fn trace ->
+      Formatter.format(trace, opts[:custom_formatter])
+    end
+
     :recon_trace.calls(
       {module_name, function_name, ms},
       limit,
-      opts ++ [timestamp: :trace, formatter: &Formatter.format/1]
+      opts ++ [timestamp: :trace, formatter: formatter]
     )
   end
 
