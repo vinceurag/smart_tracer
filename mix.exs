@@ -6,6 +6,7 @@ defmodule SmartTracer.MixProject do
       app: :smart_tracer,
       version: "0.1.3",
       elixir: "~> 1.6",
+      elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       description: description(),
@@ -23,9 +24,11 @@ defmodule SmartTracer.MixProject do
     ]
   end
 
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
+
   defp deps do
     [
-      {:recon, "~> 2.3.6"},
       {:ex_doc, "~> 0.14", only: :dev, runtime: false}
     ]
   end
