@@ -4,7 +4,7 @@ defmodule SmartTracer.MixProject do
   def project do
     [
       app: :smart_tracer,
-      version: "0.1.3",
+      version: "0.2.0",
       elixir: "~> 1.6",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -34,7 +34,7 @@ defmodule SmartTracer.MixProject do
   end
 
   defp description() do
-    "A simple wrapper around `recon_trace` that would help you in live debugging."
+    "A simple tracer with recording capabilities that would help you in live debugging."
   end
 
   defp package() do

@@ -46,14 +46,12 @@ defmodule SmartTracer do
       [%SmartTracer.Utils.Recorder.Call{
         args: ["Vince"],
         arity: 1,
-        datetime: #DateTime<2020-02-01 18:13:04Z>,
         function: :hello,
         module: SmartTracer.Support.FakeModule,
         type: :call
       },
       %SmartTracer.Utils.Recorder.Return{
         arity: 1,
-        datetime: #DateTime<2020-02-01 18:13:04Z>,
         function: :hello,
         module: SmartTracer.Support.FakeModule,
         return_value: "Hello, my name is NAME-Vince",
