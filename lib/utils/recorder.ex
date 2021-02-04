@@ -34,37 +34,29 @@ defmodule SmartTracer.Utils.Recorder do
     not is_nil(pid)
   end
 
-  defp build_record({:call, {module, func_name, args, erl_time}}) do
+  defp build_record({:call, {module, func_name, args}}) do
     %SmartTracer.Utils.Recorder.Call{
       type: :call,
       module: module,
       function: func_name,
       args: args,
-      arity: Enum.count(args),
-      datetime: get_datetime(erl_time)
+      arity: Enum.count(args)
     }
   end
 
-  defp build_record({:return, {module, func_name, arity, return_value, erl_time}}) do
+  defp build_record({:return, {module, func_name, arity, return_value}}) do
     %SmartTracer.Utils.Recorder.Return{
       type: :return,
       module: module,
       function: func_name,
       arity: arity,
-      return_value: return_value,
-      datetime: get_datetime(erl_time)
+      return_value: return_value
     }
-  end
-
-  defp get_datetime({megasec, sec, _}) do
-    unix_timestamp = megasec * 1_000_000 + sec
-
-    DateTime.from_unix!(unix_timestamp)
   end
 
   defp recording_not_started_error() do
     Logger.error("""
-    Trace recording was not started. 
+    Trace recording was not started.
     Be sure to start the recording by using SmartTracer.start_recording/0
     or by using `record: true` option when starting a trace.
     """)

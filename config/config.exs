@@ -9,9 +9,9 @@ use Mix.Config
 # third-party users, it should be done in your "mix.exs" file.
 
 # You can configure your application as:
-#
-#     config :smart_tracer, key: :value
-#
+
+config :smart_tracer, default_formatter: SmartTracer
+
 # and access this configuration in your application as:
 #
 #     Application.get_env(:smart_tracer, :key)
@@ -26,5 +26,5 @@ use Mix.Config
 # by uncommenting the line below and defining dev.exs, test.exs and such.
 # Configuration from the imported file will override the ones defined
 # here (which is why it is important to import them last).
-#
-#     import_config "#{Mix.env()}.exs"
+
+import_config "#{Mix.env()}.exs"

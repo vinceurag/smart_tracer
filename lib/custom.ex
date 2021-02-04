@@ -31,7 +31,7 @@ defmodule SmartTracer.Custom do
       defdelegate stop(), to: SmartTracer.Core
 
       def trace(function, limit, opts \\ []),
-        do: SmartTracer.Core.trace(function, limit, [custom_formatter: __MODULE__] ++ opts)
+        do: SmartTracer.Core.trace(function, limit, __MODULE__, opts)
     end
   end
 end
