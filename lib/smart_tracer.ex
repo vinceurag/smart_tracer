@@ -63,6 +63,8 @@ defmodule SmartTracer do
   alias SmartTracer.Core
   alias SmartTracer.Utils.Recorder
 
+  require Logger
+
   @default_formatter Application.get_env(:smart_tracer, :default_formatter)
 
   @doc """
@@ -97,14 +99,12 @@ defmodule SmartTracer do
   def playback(), do: Recorder.playback()
 
   @doc false
-  def action(:call, {module, func_name, args}) do
-    IO.puts("\n#{module}.#{func_name}/#{length(args)} is being called with:")
-    IO.puts(IO.ANSI.format([:yellow, "\t#{inspect(args)}"]))
+  def handle(:call, {module, func_name, args}) do
+    Logger.info("#{module}.#{func_name}/#{length(args)} is being called with: #{inspect(args)}")
   end
 
   @doc false
-  def action(:return, {module, func_name, arity, return_value}) do
-    IO.puts("\n#{module}.#{func_name}/#{arity} returns:")
-    IO.puts(IO.ANSI.format([:green, "\t#{inspect(return_value)}"]))
+  def handle(:return, {module, func_name, arity, return_value}) do
+    Logger.info("#{module}.#{func_name}/#{arity} returns: #{inspect(return_value)}")
   end
 end
